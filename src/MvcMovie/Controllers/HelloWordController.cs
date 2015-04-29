@@ -14,6 +14,13 @@ namespace MvcMovie.Controllers
             return View();
         }
 
+        public ActionResult Welcome(string name, int numTimes = 1)
+        {
+
+            ViewBag.Message = "Hello " + name;
+            ViewBag.NumTimes = numTimes;
+            return View();
+        }
         //[Route("helloword/welcome/{name}/{numtimes?}")]
         ////[Route("helloword/welcome/{name}")]
         //public string Welcome(string name, int numTimes = 1)
