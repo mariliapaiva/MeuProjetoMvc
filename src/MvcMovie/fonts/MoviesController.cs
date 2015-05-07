@@ -14,10 +14,39 @@ namespace MvcMovie.Controllers
     {
         private MovieDbContext db = new MovieDbContext();
 
-        // GET: Movies
-        public ActionResult Index()
+        // GET: Movies //Métodos com o verbo Get, devolvem o HTML que tem a estrutura do formulário que será vista pelo usuário
+        public ActionResult Index(string movieGenre,string searchString)
         {
-            return View(db.Movies.ToList());
+            var GenreLst = new List<string>();
+            var GenreQuery = from d in db.Movies
+                             orderby d.Genre
+                             select d.Genre;
+
+            GenreLst.AddRange(GenreQuery.Distinct());
+            ViewBag.movieGenre = new SelectList(GenreLst); //O selectlist é usado para preencher dropdownlist
+
+            var movies = from m in db.Movies //A consulta é definida neste ponto, mas ainda não foi executada no banco de dados.
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                //Consultas LINQ não são executadas quando eles são definidos, ou quando são modificados, chamando um método como Where ou OrderBy. Em vez disso, 
+                //a execução da consulta é adiada, o que significa que a avaliação de uma expressão é adiada até que seu valor realizado na verdade iterada ou o 
+                //método ToList é chamado.Ou seja, só tem o resultado de uma expressão lâmbida, quando: "um consumer consome a query".
+                // ToList e foreach são exemplos de consomer.
+                movies = movies.Where(s => s.Title.Contains(searchString));
+                // outra maneira de escrever a linha acima é:
+                //from s in movies
+                //where s.Title.Contains(searchString)
+                //select s
+
+            }
+            if (!String.IsNullOrEmpty(movieGenre))
+            {
+                movies = movies.Where(x => x.Genre == movieGenre);
+            }
+
+            return View(movies);
         }
 
         // GET: Movies/Details/5
@@ -36,17 +65,17 @@ namespace MvcMovie.Controllers
         }
 
         // GET: Movies/Create
-        public ActionResult Create()
+        public ActionResult Create() //The Create method passes an empty movie object to the Create view.
         {
             return View();
         }
 
-        // POST: Movies/Create
+        // POST: Movies/Create //O browser cria uma requisição post com os dados do formulário que será tratada pelo método Create abaixo.  
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Title,ReleaseDate,Genre,Price")] Movie movie)
+        public ActionResult Create([Bind(Include = "ID,Title,ReleaseDate,Genre,Price, Rating")] Movie movie)
         {
             if (ModelState.IsValid)
             {
@@ -59,6 +88,7 @@ namespace MvcMovie.Controllers
         }
 
         // GET: Movies/Edit/5
+        //All the HttpGet methods follow a similar pattern. They get a movie object (or list of objects, in the case of Index), and pass the model to the view.
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -77,14 +107,14 @@ namespace MvcMovie.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,ReleaseDate,Genre,Price")] Movie movie)
+        [ValidateAntiForgeryToken] //O atributo ValidateAntiForgeryToken é usado para evitar a falsificação de uma solicitação.Ele valida o token XSRF gerado pela chamada @Html.AntiForgeryToken() na View. 
+        public ActionResult Edit([Bind(Include = "ID,Title,ReleaseDate,Genre,Price, Rating")] Movie movie)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid)// É um método.
             {
                 db.Entry(movie).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index"); //After saving the data, the code redirects the user to the Index action method of the MoviesController class, which displays the movie collection, including the changes just made.
             }
             return View(movie);
         }

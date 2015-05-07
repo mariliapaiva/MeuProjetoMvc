@@ -1,7 +1,8 @@
-﻿@model MvcMovie.Models.Movie
-
+﻿@model MvcMovie.Models.Movie 
 @{
     ViewBag.Title = "Details";
+    // Aqui eu defino o tipo da propriedade Model da View (toda View tem uma property Model) - uso a diretiva @model do Razor
+
 }
 
 <h2>Details</h2>
@@ -11,7 +12,7 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(m => m.Title)
         </dt>
 
         <dd>
@@ -41,7 +42,13 @@
         <dd>
             @Html.DisplayFor(model => model.Price)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Rating)
+        </dt>
 
+        <dd>
+            @Html.DisplayFor(model => model.Rating)
+        </dd>
     </dl>
 </div>
 <p>
