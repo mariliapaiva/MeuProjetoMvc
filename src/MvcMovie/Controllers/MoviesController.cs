@@ -30,26 +30,25 @@ namespace MvcMovie.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                //Consultas LINQ não são executadas quando eles são definidos, ou quando são modificados, chamando um método como Where ou OrderBy. Em vez disso, 
-                //a execução da consulta é adiada, o que significa que a avaliação de uma expressão é adiada até que seu valor realizado na verdade iterada ou o 
-                //método ToList é chamado.Ou seja, só tem o resultado de uma expressão lâmbida, quando: "um consumer consome a query".
+                //Consultas LINQ não são executadas quando eles são definidos, ou quando são modificados, chamando um método como Where ou OrderBy. 
+                //Em vez disso, a execução da consulta é adiada, o que significa que a avaliação de uma expressão é adiada até que seu 
+                //valor realizado, na verdade iterada ou o 
+                //método ToList é chamado.Ou seja, só se tem o resultado de uma expressão lâmbida, quando: "um consumer consumir a query".
                 // ToList e foreach são exemplos de consomer.
                 movies = movies.Where(s => s.Title.Contains(searchString));
-                // outra maneira de escrever a linha acima é:
+                // Outra maneira de escrever a linha acima é:
                 //from s in movies
                 //where s.Title.Contains(searchString)
                 //select s
-
             }
             if (!String.IsNullOrEmpty(movieGenre))
             {
-                movies = movies.Where(x => x.Genre == movieGenre);
+                movies = movies.Where(g => g.Genre == movieGenre);
             }
-
             return View(movies);
         }
 
-        // GET: Movies/Details/5
+        // GET: Movies/Details/5 >> Controller/Action Método/ ID
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -69,7 +68,6 @@ namespace MvcMovie.Controllers
         {
             return View();
         }
-
         // POST: Movies/Create //O browser cria uma requisição post com os dados do formulário que será tratada pelo método Create abaixo.  
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -83,7 +81,6 @@ namespace MvcMovie.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
             return View(movie);
         }
 
@@ -107,7 +104,8 @@ namespace MvcMovie.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken] //O atributo ValidateAntiForgeryToken é usado para evitar a falsificação de uma solicitação.Ele valida o token XSRF gerado pela chamada @Html.AntiForgeryToken() na View. 
+        [ValidateAntiForgeryToken] //O atributo ValidateAntiForgeryToken é usado para evitar a falsificação de uma solicitação.
+                                   //Ele valida o token XSRF gerado pela chamada @Html.AntiForgeryToken() na View. 
         public ActionResult Edit([Bind(Include = "ID,Title,ReleaseDate,Genre,Price, Rating")] Movie movie)
         {
             if (ModelState.IsValid)// É um método.
@@ -135,7 +133,8 @@ namespace MvcMovie.Controllers
         }
 
         // POST: Movies/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Delete")] //é colocado o"ActionName("Delete")" , para que o ASP.NET possa achar o método Delete com verbo POST, qdo receber a requisição. Já que o
+        //nome do método está:DeleteConfirmed
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {

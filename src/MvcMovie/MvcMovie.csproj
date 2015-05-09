@@ -121,7 +121,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HelloWordController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="fonts\MoviesController.cs" />
+    <Compile Include="Controllers\MoviesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -136,6 +136,10 @@
     <Compile Include="Migrations\201505060210081_AddRating.cs" />
     <Compile Include="Migrations\201505060210081_AddRating.Designer.cs">
       <DependentUpon>201505060210081_AddRating.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505070254360_IncluindoDataAnnotations.cs" />
+    <Compile Include="Migrations\201505070254360_IncluindoDataAnnotations.Designer.cs">
+      <DependentUpon>201505070254360_IncluindoDataAnnotations.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Movie.cs" />
@@ -204,6 +208,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505060210081_AddRating.resx">
       <DependentUpon>201505060210081_AddRating.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505070254360_IncluindoDataAnnotations.resx">
+      <DependentUpon>201505070254360_IncluindoDataAnnotations.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
